@@ -15,11 +15,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.IntStream;
+
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.CoreMatchers.is;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -107,10 +107,10 @@ public class WerkItElementTest {
         assertThat(driver.getTitle()).isEqualTo("React App");  // Valider que c'est le bon site
         driver.findElement(By.linkText("Home")).click();  // Ouvrir la home page
         driver.findElement(By.name("username")).click();
-        driver.findElement(By.name("username")).sendKeys("fatou00");
+        driver.findElement(By.name("username")).sendKeys("fatou00");  // Remplir avec le bon username
         driver.findElement(By.name("password")).click();
-        driver.findElement(By.name("password")).sendKeys("fatouspassword");
-        driver.findElement(By.cssSelector("#login > input[type=submit]")).click();
+        driver.findElement(By.name("password")).sendKeys("fatouspassword");  // Remplir avec le bon password
+        driver.findElement(By.cssSelector("#login > input[type=submit]")).click();   // Submit to log in
     }
 
     @Test
@@ -118,7 +118,7 @@ public class WerkItElementTest {
         driver.get("https://staging.tiered-planet.net/werk-it");
         driver.findElement(By.linkText("Home")).click();
         driver.findElement(By.name("username")).click();
-        driver.findElement(By.name("username")).sendKeys("abcd");
+        driver.findElement(By.name("username")).sendKeys("abcd");   // utiliser un login erroné
         driver.findElement(By.name("password")).click();
         driver.findElement(By.name("password")).sendKeys("fatouspassword");
         driver.findElement(By.cssSelector("#login > input[type=submit]")).click();
@@ -132,7 +132,6 @@ public class WerkItElementTest {
 
         //Display invalid username as error message
     }
-
 
 
     @Test
@@ -154,8 +153,64 @@ public class WerkItElementTest {
         //Display Invalid password as error message
     }
 
+    @Test
+    public void blankUsername() {
+        driver.get("https://staging.tiered-planet.net/werk-it");
+        driver.findElement(By.linkText("Home")).click();
+        driver.findElement(By.name("username")).click();
+        //  Field empty
+        driver.findElement(By.name("username")).sendKeys("");
+        driver.findElement(By.name("password")).click();
+        //  Using an existing password
+        driver.findElement(By.name("password")).sendKeys("fatou");
+        driver.findElement(By.cssSelector("#login > input[type=submit]")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement alert = wait.until(ExpectedConditions
+                .presenceOfElementLocated(By.cssSelector("#root > div > div > div:nth-child(2) > p")));
+        //Error message
+        assertEquals("Login Failed", driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[2]/p")).getText());
 
-    
+        // Changer le message d'erreur
+    }
+
+    @Test
+    public void blankPassword() {
+        driver.get("https://staging.tiered-planet.net/werk-it");
+        driver.findElement(By.linkText("Home")).click();
+        driver.findElement(By.name("username")).click();
+        // Using an existing user
+        driver.findElement(By.name("username")).sendKeys("fatou00");
+        driver.findElement(By.name("password")).click();
+        // Field empty
+        driver.findElement(By.name("password")).sendKeys("");
+        driver.findElement(By.cssSelector("#login > input[type=submit]")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement alert = wait.until(ExpectedConditions
+                .presenceOfElementLocated(By.cssSelector("#root > div > div > div:nth-child(2) > p")));
+        //Error message
+        assertEquals("Login Failed", driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[2]/p")).getText());
+        
+    }
+
+    @Test
+    public void invalidUserNameAndPassword() {
+        driver.get("https://staging.tiered-planet.net/werk-it");
+        assertThat(driver.getTitle()).isEqualTo("React App");
+        driver.findElement(By.linkText("Home")).click();
+        driver.findElement(By.name("username")).click();
+        driver.findElement(By.name("username")).sendKeys("f");
+        driver.findElement(By.name("password")).click();
+        driver.findElement(By.name("password")).sendKeys("fatou");
+        driver.findElement(By.cssSelector("#login > input[type=submit]")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement alert = wait.until(ExpectedConditions
+                .presenceOfElementLocated(By.cssSelector("#root > div > div > div:nth-child(2) > p")));
+        assertEquals("Login Failed", driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[2]/p")).getText());
+
+        // Change error message
+
+    }
+
 
     @Test
     public void failedLoginAttempts3Times() {
@@ -183,8 +238,6 @@ public class WerkItElementTest {
         //Then Message Displayed as Invalid Login
         //And       They cannot login for 24 hours
         //And       Remind the user that there is a link to recover password
-
-
 
 
     }
