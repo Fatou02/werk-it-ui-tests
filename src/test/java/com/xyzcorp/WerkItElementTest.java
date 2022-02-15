@@ -215,7 +215,8 @@ public class WerkItElementTest {
     @Test
     public void failedLoginAttempts3Times() {
 
-        driver.findElement(By.linkText("Home")).click(); ////redirection vers la page *Home* et saisie des donnees invalides
+
+        driver.findElement(By.linkText("Login")).click();
 
         for (int i = 0; i < 3; ++i) {  //initialisation du compteur de tentatives
 
@@ -242,6 +243,8 @@ public class WerkItElementTest {
             driver.findElement(By.name("username")).clear();
             driver.findElement(By.name("password")).clear();
         }
+
+        assertThat(driver.findElement(By.cssSelector("#login > a")).isDisplayed());
 
         //Then Message Displayed as Invalid Login
         //And       They cannot login for 24 hours
