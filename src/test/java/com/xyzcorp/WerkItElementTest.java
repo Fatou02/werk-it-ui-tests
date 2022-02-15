@@ -397,7 +397,7 @@ public class WerkItElementTest {
     @Test
     public void addAerobicsExercise() {
 
-        JSONObject weightExercise = new JSONObject()
+        JSONObject aerobicsExercise = new JSONObject()
                 .put("seconds", "3000")
                 .put("name", "cycling"); // champs vide
 
@@ -405,7 +405,7 @@ public class WerkItElementTest {
                 .relaxedHTTPSValidation()
                 .accept(JSON)
                 .contentType(JSON)
-                .body(weightExercise.toString())
+                .body(aerobicsExercise.toString())
                 .when()
                 .post("https://staging.tiered-planet.net/werk-it-back-end/aerobics/user/11")
                 .then()
@@ -413,7 +413,7 @@ public class WerkItElementTest {
                 .statusCode(200);
     }
 
-    
+
 
 
 
