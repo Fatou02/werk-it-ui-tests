@@ -189,7 +189,7 @@ public class WerkItElementTest {
                 .presenceOfElementLocated(By.cssSelector("#root > div > div > div:nth-child(2) > p")));
         //Error message
         assertEquals("Login Failed", driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[2]/p")).getText());
-        
+
     }
 
     @Test
@@ -215,15 +215,21 @@ public class WerkItElementTest {
     @Test
     public void failedLoginAttempts3Times() {
 
-        driver.findElement(By.linkText("Home")).click();
+        driver.findElement(By.linkText("Home")).click(); ////redirection vers la page *Home* et saisie des donnees invalides
 
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) {  //initialisation du compteur de tentatives
 
+            //on saisit des données invalides
             driver.findElement(By.name("username")).click();
             driver.findElement(By.name("username")).sendKeys("fatou00");
             driver.findElement(By.name("password")).click();
             driver.findElement(By.name("password")).sendKeys("fatou");
+
+            //on click ensuite sur le bouton de soumission
             driver.findElement(By.cssSelector("#login > input[type=submit]")).click();
+
+            //verifier ici que le *Message Displayed as Invalid Login* est present
+
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
@@ -231,6 +237,8 @@ public class WerkItElementTest {
                     .presenceOfElementLocated(By.cssSelector("#root > div > div > div:nth-child(2) > p")));
 
             assertEquals("Login Failed", driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[2]/p")).getText());
+
+            //effacer les donnees invalides ici
             driver.findElement(By.name("username")).clear();
             driver.findElement(By.name("password")).clear();
         }
