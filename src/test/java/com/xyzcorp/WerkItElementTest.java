@@ -380,7 +380,7 @@ public class WerkItElementTest {
                 .put("pounds", "40")
                 .put("reps", 20)
                 .put("sets", 2)
-                .put("name", "bench press"); // champs vide
+                .put("name", "bench press");
 
         given()
                 .relaxedHTTPSValidation()
@@ -388,11 +388,35 @@ public class WerkItElementTest {
                 .contentType(JSON)
                 .body(weightExercise.toString())
                 .when()
-                .post("https://staging.tiered-planet.net/werk-it-back-end/register")
+                .post("https://staging.tiered-planet.net/werk-it-back-end/aerobics/user/11")
                 .then()
                 .assertThat()
-                .statusCode(200); // un bug il accept tous les vides
+                .statusCode(200);
     }
+
+    @Test
+    public void addAerobicsExercise() {
+
+        JSONObject weightExercise = new JSONObject()
+                .put("seconds", "3000")
+                .put("name", "cycling"); // champs vide
+
+        given()
+                .relaxedHTTPSValidation()
+                .accept(JSON)
+                .contentType(JSON)
+                .body(weightExercise.toString())
+                .when()
+                .post("https://staging.tiered-planet.net/werk-it-back-end/aerobics/user/11")
+                .then()
+                .assertThat()
+                .statusCode(200);
+    }
+
+    
+
+
+
 
 
 
