@@ -2,6 +2,7 @@ package com.xyzcorp;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.restassured.http.ContentType;
+import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import java.util.List;
 
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -269,8 +271,8 @@ public class WerkItElementTest {
                 .put("password", "cgi");
         given()
                 .relaxedHTTPSValidation()
-                .accept(ContentType.JSON)
-                .contentType(ContentType.JSON)
+                .accept(JSON)
+                .contentType(JSON)
                 .body(prfilebject.toString())
                 .when()
                 .post("https://staging.tiered-planet.net/werk-it-back-end/register")
@@ -294,8 +296,8 @@ public class WerkItElementTest {
                 .put("password", "cgi");
         given()
                 .relaxedHTTPSValidation()
-                .accept(ContentType.JSON)
-                .contentType(ContentType.JSON)
+                .accept(JSON)
+                .contentType(JSON)
                 .body(prfilebject.toString())
                 .when()
                 .post("https://staging.tiered-planet.net/werk-it-back-end/register")
@@ -322,6 +324,80 @@ public class WerkItElementTest {
                 .body("password", equalTo("point234"))
                 .statusCode(200);
     }
+
+    //A Recover Password Link Should always be displayed in the login page
+    @Test
+    public void recoverPasswordLinkIsDisplayed() {
+
+        //page d accueil
+        driver.get("https://staging.tiered-planet.net/werk-it"); //open URL
+        assertThat(driver.getTitle()).isEqualTo("React App");
+        //click sur login
+        driver.findElement(By.xpath("//*[@id=\"navbarScroll\"]/div[1]/a[2]")).click();
+        //verifier si l option pour recouvrer le mot de passe est disponible
+        assertThat(driver.findElement(By.xpath("//*[@id=\"login\"]/a")).isDisplayed());
+
+    }
+
+    @Test
+    public void RecoverPassword() {
+
+        //page d'accueil
+        driver.get("https://staging.tiered-planet.net/werk-it"); //open URL
+        assertThat(driver.getTitle()).isEqualTo("React App");
+        //click sur login
+        driver.findElement(By.xpath("//*[@id=\"navbarScroll\"]/div[1]/a[2]")).click();
+        //click sur recover password
+        driver.findElement(By.xpath("//*[@id=\"login\"]/a")).click();
+        //verifier que l'on est redirigé sur la page de recupération du password
+        String myCurrentURL = driver.getCurrentUrl();
+        Assertions.assertThat(myCurrentURL.contains("/recover-password")).isTrue();
+    }
+
+    @Test
+    public void getExercisesByUser() {
+        driver.get("https://staging.tiered-planet.net/werk-it");
+        driver.findElement(By.linkText("Home")).click();
+        driver.findElement(By.name("username")).click();
+        // Using an existing user
+        driver.findElement(By.name("username")).sendKeys("dhinojosa");
+        driver.findElement(By.name("password")).click();
+        // Field empty
+        driver.findElement(By.name("password")).sendKeys("swimming");
+        driver.findElement(By.cssSelector("#login > input[type=submit]")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        // Redirects to the exercise page after logging in
+        WebElement alert = wait.until(ExpectedConditions
+                .presenceOfElementLocated(By.cssSelector("#navbarScroll > div.me-auto.my-2.my-md-0.navbar-nav.navbar-nav-scroll > a:nth-child(3)")));
+
+    }
+
+
+    @Test
+    public void addWeightExercise() {
+
+        JSONObject weightExercise = new JSONObject()
+                .put("pounds", "40")
+                .put("reps", 20)
+                .put("sets", 2)
+                .put("name", "bench press"); // champs vide
+
+        given()
+                .relaxedHTTPSValidation()
+                .accept(JSON)
+                .contentType(JSON)
+                .body(weightExercise.toString())
+                .when()
+                .post("https://staging.tiered-planet.net/werk-it-back-end/register")
+                .then()
+                .assertThat()
+                .statusCode(200); // un bug il accept tous les vides
+    }
+
+
+
+
+
 }
 
 
