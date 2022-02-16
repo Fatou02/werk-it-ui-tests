@@ -102,6 +102,15 @@ public class WerkItElementTest {
     }
 
 
+
+    public void verifyThatWeAreInExercisePage(){
+        String actualUrl = "https://staging.tiered-planet.net/exercises"; //lien attendu
+        String expectedUrl = driver.getCurrentUrl();//lien actuel après soumission du formulaire;
+        assertEquals(expectedUrl, actualUrl);// verifie si les liens actuel et espéré sont les mêmes
+
+    }
+
+
     @Test
     public void UserLogin() throws InterruptedException {
 
@@ -113,10 +122,8 @@ public class WerkItElementTest {
         driver.findElement(By.name("password")).click();
         driver.findElement(By.name("password")).sendKeys("fatouspassword");  // Remplir avec le bon password
         driver.findElement(By.cssSelector("#login > input[type=submit]")).click();   // Submit to log in
-        Thread.sleep(3000); //le temps aloue pour le chargement de la page
-        String actualUrl = "https://staging.tiered-planet.net/exercises"; //lien attendu
-        String expectedUrl = driver.getCurrentUrl();//lien actuel apres soumission du formulaire;
-        assertEquals(expectedUrl, actualUrl);// verifie si le lien actuel est egal au lien expere si login sucess!!
+        Thread.sleep(3000); //le temps alloué pour le chargement de la page
+        verifyThatWeAreInExercisePage();
     }
 
     @Test
@@ -416,14 +423,6 @@ public class WerkItElementTest {
                 .assertThat()
                 .statusCode(200);
     }
-
-
-
-
-
-
-
-
 
 
 }
