@@ -269,11 +269,7 @@ public class WerkItElementTest {
 
     @Test
     public void tesTPostUserFailed() {
-        //"username": "brenjanth4023",
-        //    "email": "brejanth@cgi.com",
-        //    "firstName": "Brenjanth",
-        //    "lastName": "Rajendran",
-        //    "password": "2Dextreme!"
+      
         JSONObject prfilebject = new JSONObject()
                 .put("username", "cgi")
                 .put("email", "cgi") // Adresse mail novalide
@@ -294,11 +290,7 @@ public class WerkItElementTest {
 
     @Test
     public void tesTPostUserFailed2() {
-        //"username": "brenjanth4023",
-        //    "email": "brejanth@cgi.com",
-        //    "firstName": "Brenjanth",
-        //    "lastName": "Rajendran",
-        //    "password": "2Dextreme!"
+      
         JSONObject prfilebject = new JSONObject()
                 .put("username", "")  // champs vide
                 .put("email", "cgi@cgi.com")
